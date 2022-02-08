@@ -26,7 +26,7 @@ Compile.prototype = {
                     let exp = attr.value;
                     if (Directive.isDirective(name)) {
                         let directiveFun = directiveCallback[directiveCallback.init(name)];
-                        directiveFun.bind(this)(node, exp, name);
+                        directiveFun && directiveFun.bind(this)(node, exp, name);
                     }
                 });
             }
@@ -70,24 +70,24 @@ Compile.prototype = {
     compileElement: function() {},
     compileEvent: function() {},
     compileModel: function() {},
-    isDirective: function(attr) {
-        return attr.indexOf("v-") == 0;
-    },
-    isEventDirective: function(attr) {
-        return attr.indexOf("@") === 0;
-    },
-    isModelDirective: function(attr) {
-        return attr.indexOf("v-model") === 0;
-    },
-    isTextDirective: function(attr) {
-        return attr.indexOf("v-text") === 0;
-    },
-    isHtmlDirective: function(attr) {
-        return attr.indexOf("v-html") === 0;
-    },
-    isIfDirective: function(attr) {
-        return attr.indexOf("v-if") === 0;
-    },
+    // isDirective: function(attr) {
+    //     return attr.indexOf("v-") == 0;
+    // },
+    // isEventDirective: function(attr) {
+    //     return attr.indexOf("@") === 0;
+    // },
+    // isModelDirective: function(attr) {
+    //     return attr.indexOf("v-model") === 0;
+    // },
+    // isTextDirective: function(attr) {
+    //     return attr.indexOf("v-text") === 0;
+    // },
+    // isHtmlDirective: function(attr) {
+    //     return attr.indexOf("v-html") === 0;
+    // },
+    // isIfDirective: function(attr) {
+    //     return attr.indexOf("v-if") === 0;
+    // },
     isElementNode: function(node) {
         return node.nodeType === 1;
     },
@@ -120,39 +120,37 @@ var Directive = {
 //指令更新函数
 var directiveCallback = {
     init: function(attrs) {
-        let directive = null;
+        let cb = null;
         let attr = attrs.split(":")[0];
         console.log("attr", attr);
         switch (attr) {
             //事件指令
             case "v-on":
-                directive = "EventDirective";
+                cb = "EventDirective";
                 break;
                 //v-model指令
             case "v-model":
-                directive = "ModelDirective";
+                cb = "ModelDirective";
                 break;
                 //v-text指令
             case "v-text":
-                directive = "TextDirective";
+                cb = "TextDirective";
                 break;
                 //v-html 指令
             case "v-html":
-                directive = "HtmlDirective";
+                cb = "HtmlDirective";
                 break;
                 // v-if指令
             case "v-if":
-                directive = "IfDirective";
+                cb = "IfDirective";
                 break;
         }
-        console.log("directive", directive);
-        return directive;
+        console.log("cb", cb);
+        return cb;
     },
     EventDirective: function(node, funcName, name) {
         let eventName = name.split(":")[1];
-
         node.addEventListener(eventName, () => {
-            console.log("是是件", node, funcName, name, "attr", eventName, this.vm);
             this.vm[funcName](node.value);
         });
     },

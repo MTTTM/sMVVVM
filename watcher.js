@@ -6,7 +6,7 @@ function Wather(vm, exp, fn) {
     Dep.target = this;
     let val = vm;
     let arr = this.exp.split(".");
-    //出发Oberve的get,得到被修改的数据的路径
+    //触发Oberve的get,得到被修改的数据的路径
     arr.forEach(function(k) {
         //这里会触发Obser的get,触发Dep的assSubs，很关键的地方！！！！
         val = val[k];
@@ -16,7 +16,7 @@ function Wather(vm, exp, fn) {
 Wather.prototype.update = function() {
     let val = this.vm;
     let arr = this.exp.split(".");
-    //出发Oberve的get
+    //触发Oberve的get
     arr.forEach(function(k) {
         val = val[k];
     });
