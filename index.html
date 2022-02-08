@@ -13,6 +13,7 @@
         <p>{{a}}</p>
         <p>{{b.b}}</p>
         <input type="text" v-model="a"><span>{{c}}</span>
+        <input type="text" v-on:input="change" value="??">
     </div>
     <script src="./watcher.js"></script>
     <script src="./complie.js"></script>
@@ -30,6 +31,12 @@
             computed: {
                 c() {
                     return this.a + this.b.b;
+                }
+            },
+            methods: {
+                change(v) {
+                    this.a = v;
+                    console.error("change", this.a)
                 }
             }
         })

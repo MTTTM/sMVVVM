@@ -1,25 +1,36 @@
 function MVVM(options = {}) {
     this.$options = options; //将所有竖向挂着在￥options
     var data = (this._data = this.$options.data);
+    this.$methods = options.methods ? options.methods : {};
     observe(data); //添加监听
-    this.proxyData(data); //通过this直接访问data里面的数据
+    this.proxyData(data, "data"); //通过this直接访问data里面的数据
+    this.proxyData(this.$methods, "methods"); //通过this直接访问data里面的数据
     //新增computed
     initComputed.call(this);
     //为什么initComputed要放在Compile前面呢，这是有讲究的
-    Compile(options.el, this);
+    new Compile(options.el, this);
 }
 
 MVVM.prototype = {
-    proxyData: function(data) {
+    proxyData: function(data, type) {
         //把data的属性给当前对象添加，这样就可以通过this访问
         for (let key in data) {
+            if (this.$methods[key] && type !== "methods") {
+                throw "data属性不能和menthods重名";
+            }
             Object.defineProperty(this, key, {
                 enumerable: true,
                 get() {
-                    return this._data[key];
+                    if (type == "methods") {
+                        return this.$methods[key];
+                    } else {
+                        return this._data[key];
+                    }
                 },
                 set(newVal) {
-                    this._data[key] = newVal;
+                    if (type !== "methods") {
+                        this._data[key] = newVal;
+                    }
                 },
             });
         }
