@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,6 +19,8 @@
         <p>{{b.b}}</p>
         <input type="text" v-model="a"><span>{{c}}</span>
         <input type="text" v-on:input="change" value="??">
+        <div v-show="f" v-cloak>不显示了吗?</div>
+        <button v-on:click="switch">显示隐藏文本</button>
     </div>
     <script src="./watcher.js"></script>
     <script src="./complie.js"></script>
@@ -26,7 +33,8 @@
                 a: 1,
                 b: {
                     b: "bbbb"
-                }
+                },
+                f: false
             },
             computed: {
                 c() {
@@ -37,6 +45,9 @@
                 change(v) {
                     this.a = v;
                     console.error("change", this.a)
+                },
+                switch () {
+                    this.f = !this.f;
                 }
             }
         })

@@ -113,7 +113,8 @@ var Directive = {
     isHtmlDirective: function(attr) {
         return attr.indexOf("v-html") === 0;
     },
-    isIfDirective: function(attr) {
+    isShowDirective: function(attr) {
+        console.log("attr", attr);
         return attr.indexOf("v-if") === 0;
     },
 };
@@ -140,9 +141,9 @@ var directiveCallback = {
             case "v-html":
                 cb = "HtmlDirective";
                 break;
-                // v-if指令
-            case "v-if":
-                cb = "IfDirective";
+                // v-show指令
+            case "v-show":
+                cb = "ShowDirective";
                 break;
         }
         console.log("cb", cb);
@@ -172,7 +173,14 @@ var directiveCallback = {
     HtmlDirective: function(attr) {
         return attr.indexOf("v-html") === 0;
     },
-    IfDirective: function(attr) {
-        return attr.indexOf("v-if") === 0;
+    ShowDirective: function(node, exp) {
+        function switchShow(bool) {
+            node.style.display = bool ? "" : "none";
+        }
+        switchShow(this.vm[exp]);
+        node.removeAttribute("v-cloak");
+        new Wather(this.vm, exp, function(newVal) {
+            switchShow(newVal);
+        });
     },
 };
